@@ -43,14 +43,14 @@ jobs:
       # 请确保dist目录下没有多余的文件，只有需要打包的内容
 
 
-      - name: Archive binary
-        uses: actions/upload-artifact@v3
-        with:
-          name: your-app-name-darwin-arm64.zip
-          path: dist/your-app-name-darwin-arm64.zip
+    - name: Archive binary
+      uses: actions/upload-artifact@v3
+      with:
+        name: your-app-name-darwin-arm64.zip
+        path: dist/your-app-name-darwin-arm64.zip
 
-      - name: Upload release
-        if: github.event.release.tag_name
-        run: gh release upload ${{ github.event.release.tag_name }} dist/your-app-name-darwin-arm64.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Upload release
+      if: github.event.release.tag_name
+      run: gh release upload ${{ github.event.release.tag_name }} dist/your-app-name-darwin-arm64.zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

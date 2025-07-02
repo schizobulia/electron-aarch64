@@ -1,0 +1,52 @@
+name: Package Electron App
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  release:
+    types: [created]
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    strategy:
+      matrix:
+        node-version: [18.x] # 你可以根据需要选择Node.js的版本
+        architecture: [aarch64]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build Electron app
+      run: npm run build # 确保你的package.json中有对应的构建脚本
+
+    - name: Compress build directory
+      run: |
+        cd dist
+        zip -r ../your-app-name-darwin-arm64.zip ./
+      # 请确保dist目录下没有多余的文件，只有需要打包的内容
+
+    - name: Upload release asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ./your-app-name-darwin-arm64.zip # 替换为你的打包文件路径
+        asset_name: your-app-name-darwin-arm64.zip # 替换为你的打包文件名
+        asset_content_type: application/zip

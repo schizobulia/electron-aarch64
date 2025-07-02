@@ -2,13 +2,8 @@ name: Package Electron App
 
 on:
   push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-  release:
-    types: [created]
+    tags:
+      - '*'
 
 jobs:
   build:
@@ -43,6 +38,18 @@ jobs:
         cd dist
         zip -r ../your-app-name-darwin-arm64.zip ./
       # 请确保dist目录下没有多余的文件，只有需要打包的内容
+
+
+    - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
 
     - name: Upload release asset
       uses: actions/upload-release-asset@v1

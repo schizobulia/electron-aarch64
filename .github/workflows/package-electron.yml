@@ -22,35 +22,35 @@ jobs:
             distro: bullseye  
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
 
-    - name: Install dependencies
-      run: npm install
+      - name: Install dependencies
+        run: npm install
 
-    - name: Build Electron app
-      run: npm run build # 确保你的package.json中有对应的构建脚本
+      - name: Build Electron app
+        run: npm run build # 确保你的package.json中有对应的构建脚本
 
-    - name: Compress build directory
-      run: |
-        cd dist
-        zip -r ../your-app-name-darwin-arm64.zip ./
-      # 请确保dist目录下没有多余的文件，只有需要打包的内容
+      - name: Compress build directory
+        run: |
+          cd dist
+          zip -r ../your-app-name-darwin-arm64.zip ./
+        # 请确保dist目录下没有多余的文件，只有需要打包的内容
 
 
-    - name: Archive binary
-      uses: actions/upload-artifact@v3
-      with:
-        name: your-app-name-darwin-arm64.zip
-        path: dist/your-app-name-darwin-arm64.zip
+      - name: Archive binary
+        uses: actions/upload-artifact@v3
+        with:
+          name: your-app-name-darwin-arm64.zip
+          path: dist/your-app-name-darwin-arm64.zip
 
-    - name: Upload release
-      if: github.event.release.tag_name
-      run: gh release upload ${{ github.event.release.tag_name }} dist/your-app-name-darwin-arm64.zip
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload release
+        if: github.event.release.tag_name
+        run: gh release upload ${{ github.event.release.tag_name }} dist/your-app-name-darwin-arm64.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

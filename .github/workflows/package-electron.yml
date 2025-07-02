@@ -15,10 +15,13 @@ jobs:
     runs-on: ubuntu-22.04
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     strategy:
       matrix:
         node-version: [18.x] # 你可以根据需要选择Node.js的版本
-        architecture: [aarch64]
+        include:
+          - arch: aarch64
+            distro: bullseye  
 
     steps:
     - name: Checkout code
